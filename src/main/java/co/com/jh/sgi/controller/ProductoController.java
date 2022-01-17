@@ -74,7 +74,7 @@ public class ProductoController {
         if (producto != null) {
             responseEntity = new ResponseEntity<Producto>(producto, HttpStatus.OK);
         } else {
-            responseEntity = new ResponseEntity<Producto>(HttpStatus.NO_CONTENT);
+            responseEntity = new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
         }
         return responseEntity;
     }
@@ -134,7 +134,7 @@ public class ProductoController {
             if (productoFromDB != null) {
                 responseAsMap.put("producto", producto);
                 responseAsMap.put("mensaje", "El producto con id: " + producto.getIdProducto() + ", se ha actualizado exitosamente!");
-                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.OK);
+                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.ACCEPTED);
             } else {
                 responseAsMap.put("mensaje", "El producto no se ha actualizado exitosamente!");
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -147,16 +147,16 @@ public class ProductoController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Producto> deleteById(@PathVariable long id) {
+    public ResponseEntity<?> deleteById(@PathVariable long id) {
 
         Producto producto = productoService.findById(id);
-        ResponseEntity<Producto> responseEntity = null;
+        ResponseEntity<Producto> responseEntity;
 
         if (producto != null) {
             productoService.deleteById(id);
-            responseEntity = new ResponseEntity<Producto>(producto, HttpStatus.OK);
+            responseEntity = new ResponseEntity("El producto con id: " + producto.getIdProducto() + ", se eliminó exitosamente!", HttpStatus.OK);
         } else {
-            responseEntity = new ResponseEntity<Producto>(HttpStatus.NO_CONTENT);
+            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return responseEntity;
 
